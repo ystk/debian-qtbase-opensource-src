@@ -1,3 +1,10 @@
+qtbase-opensource-src (5.3.2+dfsg-4+deb8u5) jessie-security; urgency=high
+
+  * CVE-2020-17507: Fix a buffer overread issue when reading XBM image files.
+    (Closes: #968444)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 21 Aug 2020 12:45:27 +0100
+
 qtbase-opensource-src (5.3.2+dfsg-4+deb8u4) jessie-security; urgency=medium
 
   [ Mike Gabriel ]
