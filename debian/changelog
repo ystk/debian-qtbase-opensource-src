@@ -1,3 +1,11 @@
+qtbase-opensource-src (5.3.2+dfsg-4+deb8u6) jessie-security; urgency=high
+
+  * Non-maintainer upload by the ELTS Team.
+  * CVE-2018-19872
+    A malformed PPM image causes a crash.
+
+ -- Thorsten Alteholz <debian@alteholz.de>  Fri, 19 Nov 2021 23:03:02 +0100
+
 qtbase-opensource-src (5.3.2+dfsg-4+deb8u5) jessie-security; urgency=high
 
   * CVE-2020-17507: Fix a buffer overread issue when reading XBM image files.
