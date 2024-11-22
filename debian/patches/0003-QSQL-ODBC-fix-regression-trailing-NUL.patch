@@ -1,0 +1,54 @@
+From 1d2ddbaf40165f28abfb3f01903aaf0b95215fce Mon Sep 17 00:00:00 2001
+From: Marc Mutz <marc.mutz@qt.io>
+Date: Mon, 20 Mar 2023 12:33:02 +0100
+Subject: QSQL/ODBC: fix regression (trailing NUL)
+
+When we fixed the callers of toSQLTCHAR() to use the result's size()
+instead of the input's (which differ, if sizeof(SQLTCHAR) != 2), we
+exposed callers to the append(0), which changes the size() of the
+result QVLA. Callers that don't rely on NUL-termination (all?) now saw
+an additional training NUL.
+
+Fix by not NUL-terminating, and changing the only user of SQL_NTS to
+use an explicit length.
+
+Amends 4c445ef0bae8b36ec4a742552f0ebd81a1a90723 and
+46af1fe49f7f419dc1b3231de9860e2da0ea48f8.
+
+Done-with: Christian Ehrlicher <ch.ehrlicher@gmx.de>
+Change-Id: I6210b77e9417f46294df94cb32ab4134af8dc4c2
+Reviewed-by: Andy Shaw <andy.shaw@qt.io>
+(cherry picked from commit 9020034b3b6a3a8118e5959beed699bb8aaa3f95)
+Reviewed-by: Marc Mutz <marc.mutz@qt.io>
+Reviewed-by: Volker Hilsheimer <volker.hilsheimer@qt.io>
+---
+ src/sql/drivers/odbc/qsql_odbc.cpp | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/sql/drivers/odbc/qsql_odbc.cpp b/src/sql/drivers/odbc/qsql_odbc.cpp
+index b45da5303b..9eeddb0bb9 100644
+--- a/src/sql/drivers/odbc/qsql_odbc.cpp
++++ b/src/sql/drivers/odbc/qsql_odbc.cpp
+@@ -124,7 +124,6 @@ inline static QVarLengthArray<SQLTCHAR> toSQLTCHAR(const QString &input)
+ {
+     QVarLengthArray<SQLTCHAR> result;
+     toSQLTCHARImpl(result, input);
+-    result.append(0); // make sure it's null terminated, doesn't matter if it already is, it does if it isn't.
+     return result;
+ }
+ 
+@@ -1993,7 +1992,10 @@ void QODBCDriverPrivate::checkUnicode()
+                                   hDbc,
+                                   &hStmt);
+ 
+-    r = SQLExecDirect(hStmt, toSQLTCHAR(QLatin1String("select 'test'")).data(), SQL_NTS);
++    {
++        auto encoded = toSQLTCHAR(QLatin1String("select 'test'"));
++        r = SQLExecDirect(hStmt, encoded.data(), SQLINTEGER(encoded.size()));
++    }
+     if(r == SQL_SUCCESS) {
+         r = SQLFetch(hStmt);
+         if(r == SQL_SUCCESS) {
+-- 
+2.30.2
+

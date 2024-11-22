@@ -22,3 +22,12 @@ CVE-2020-0569.diff
 CVE-2020-17507.patch
 
 CVE-2018-19872.patch
+0001-Remove-non-UNICODE-code-branches-from-ODBC-plugin.patch
+0002-CVE-2023-24607.patch
+0003-QSQL-ODBC-fix-regression-trailing-NUL.patch
+0004-Fix-specific-overflow-in-qtextlayout.patch
+0005-QDnsLookup-Unix-make-sure-we-don-t-overflow-the-buff.patch
+0006-Ssl-Copy-the-on-demand-cert-loading-bool-from-defaul.patch
+0007-Fix-QXmlStreamReader-parsing-of-files-containing-NUL.patch
+0008-CVE-2023-37369.patch
+0009-QXmlStreamReader-Raise-error-on-unexpected-tokens.patch
